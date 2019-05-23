@@ -18,7 +18,7 @@ if [[ ! -e "$astylePath" ]]; then
 fi
 
 if [[ ! -e "$astyleConfigurationPath" ]]; then
-  echo 'ERROR: examples_formatter.conf was not found in the specified location (${astyleConfigurationPath}).'
+  echo "ERROR: examples_formatter.conf was not found in the specified location (${astyleConfigurationPath})."
   echo 'You can download examples_formatter.conf from https://raw.githubusercontent.com/arduino/Arduino/master/build/shared/examples_formatter.conf'
   exit 1
 fi
