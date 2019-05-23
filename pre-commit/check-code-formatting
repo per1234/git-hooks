@@ -13,6 +13,7 @@ readonly astylePath=$(command -v astyle)
 if [[ ! -e "$astylePath" ]]; then
   echo 'ERROR: Artistic Style is not installed or not in PATH.'
   echo 'You can download Artistic Style from https://sourceforge.net/projects/astyle/files'
+  echo 'Installation instructions: http://astyle.sourceforge.net/install.html'
   exit 1
 fi
 
