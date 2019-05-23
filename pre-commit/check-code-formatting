@@ -2,7 +2,6 @@
 
 # check code formatting compliance
 # Artistic Style must be installed in the path
-# an Artistic Style configuration file named examples_formatter.conf must be in the same folder as the astyle executable
 
 # configure the location of the Artistic Style configuration file to use in the check
 readonly astyleConfigurationPath=""
@@ -18,8 +17,7 @@ if [[ ! -e "$astylePath" ]]; then
 fi
 
 if [[ ! -e "$astyleConfigurationPath" ]]; then
-  echo "ERROR: examples_formatter.conf was not found in the specified location (${astyleConfigurationPath})."
-  echo 'You can download examples_formatter.conf from https://raw.githubusercontent.com/arduino/Arduino/master/build/shared/examples_formatter.conf'
+  echo "ERROR: The Artistic Style configuration file was not found in the specified location (${astyleConfigurationPath})."
   exit 1
 fi
 
