@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# check code formatting compliance
+# Artistic Style must be installed in the path
+# an Artistic Style configuration file named examples_formatter.conf must be in the same folder as the astyle executable
+
+# configure the location of the Artistic Style configuration file to use in the check
+readonly astyleConfigurationPath=""
+
+export PATH=/usr/local/bin:$PATH
+
+readonly astylePath=$(command -v astyle)
+
+if [[ ! -e "$astylePath" ]]; then
+  echo 'ERROR: Artistic Style is not installed or not in PATH.'
+  echo 'You can download Artistic Style from https://sourceforge.net/projects/astyle/files'
+  exit 1
+fi
+
+if [[ ! -e "$astyleConfigurationPath" ]]; then
+  echo 'ERROR: examples_formatter.conf was not found in the specified location (${astyleConfigurationPath}).'
+  echo 'You can download examples_formatter.conf from https://raw.githubusercontent.com/arduino/Arduino/master/build/shared/examples_formatter.conf'
+  exit 1
+fi
+
+# stash so that unstaged changes are not checked
+git stash -q --keep-index
+
+# set default exit status
+exitStatus=0
+
+while read -r filename; do
+  # check if the file is tracked by git
+  if ! git ls-files --error-unmatch "$filename" &>/dev/null; then
+    # don't check untracked files
+    continue
+  fi
+
+  if ! diff --strip-trailing-cr "$filename" <(astyle --options="$astyleConfigurationPath" --dry-run <"$filename"); then
+    echo "ERROR: Non-compliant code formatting in $filename"
+    # make the hook fail
+    exitStatus=1
+  fi
+done <<<"$(find . -regextype posix-extended -path './.git' -prune -or \( -iregex '.*\.((ino)|(h)|(hpp)|(hh)|(hxx)|(h\+\+)|(cpp)|(cc)|(cxx)|(c\+\+)|(cp)|(c)|(ipp)|(ii)|(ixx)|(inl)|(tpp)|(txx)|(tpl))$' -and -type f \))"
+
+git stash pop -q
+
+exit $exitStatus
