@@ -3,6 +3,9 @@
 # check for commonly misspelled words
 # codespell must be installed: https://github.com/codespell-project/codespell#installation
 
+# comma separated list of folders to exclude from the spell check
+readonly excludedPathList="'./.git'"
+
 # configure the path to the codespell ignore words list file
 # this list is used to fix false positives
 # leave blank if there is no list file
@@ -16,6 +19,11 @@ fi
 
 # stash so that unstaged changes are not checked
 git stash -q --keep-index
+
+# assemble the find options for the excluded paths from the list
+for excludedPath in ${excludedPathList//,/ }; do
+  excludeOptions="$excludeOptions -path $excludedPath -prune -or"
+done
 
 # set default exit status
 exitStatus=0
@@ -44,7 +52,7 @@ while read -r filename; do
       fi
     fi
   fi
-done <<<"$(find . -path './.git' -prune -or -type f)"
+done <<<"$(eval "find . $excludeOptions -type f")"
 
 git stash pop -q
 

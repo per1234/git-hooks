@@ -3,6 +3,9 @@
 # check code formatting compliance
 # Artistic Style must be installed in the path
 
+# comma separated list of folders to exclude from the formatting check
+readonly excludedPathList="'./.git'"
+
 # configure the location of the Artistic Style configuration file to use in the check
 readonly astyleConfigurationPath=""
 
@@ -25,6 +28,11 @@ fi
 # stash so that unstaged changes are not checked
 git stash -q --keep-index
 
+# assemble the find options for the excluded paths from the list
+for excludedPath in ${excludedPathList//,/ }; do
+  excludeOptions="$excludeOptions -path $excludedPath -prune -or"
+done
+
 # set default exit status
 exitStatus=0
 
@@ -43,7 +51,7 @@ while read -r filename; do
       exitStatus=1
     fi
   fi
-done <<<"$(find . -regextype posix-extended -path './.git' -prune -or \( -iregex '.*\.((ino)|(h)|(hpp)|(hh)|(hxx)|(h\+\+)|(cpp)|(cc)|(cxx)|(c\+\+)|(cp)|(c)|(ipp)|(ii)|(ixx)|(inl)|(tpp)|(txx)|(tpl))$' -and -type f \))"
+done <<<"$(eval "find . -regextype posix-extended $excludeOptions \( -iregex '.*\.((ino)|(h)|(hpp)|(hh)|(hxx)|(h\+\+)|(cpp)|(cc)|(cxx)|(c\+\+)|(cp)|(c)|(ipp)|(ii)|(ixx)|(inl)|(tpp)|(txx)|(tpl))$' -and -type f \)")"
 
 git stash pop -q
 
