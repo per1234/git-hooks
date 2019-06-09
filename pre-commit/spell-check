@@ -21,24 +21,27 @@ git stash -q --keep-index
 exitStatus=0
 
 while read -r filename; do
-  # check if the file is tracked by git
-  if ! git ls-files --error-unmatch "$filename" &>/dev/null; then
-    # don't check untracked files
-    continue
-  fi
-
-  if [[ "$ignoreWordsListPath" == "" ]]; then
-    # there is no ignore words file so don't use the --ignore-words option
-    if ! codespell "$filename"; then
-      echo "ERROR: Misspelled word found in $filename"
-      # make the hook fail
-      exitStatus=1
+  # check if it's a file (find matches on pruned folders)
+  if [[ -f "$filename" ]]; then
+    # check if the file is tracked by git
+    if ! git ls-files --error-unmatch "$filename" &>/dev/null; then
+      # don't check untracked files
+      continue
     fi
-  else
-    if ! codespell --ignore-words="$ignoreWordsListPath" "$filename"; then
-      echo "ERROR: Misspelled word found in $filename"
-      # make the hook fail
-      exitStatus=1
+
+    if [[ "$ignoreWordsListPath" == "" ]]; then
+      # there is no ignore words file so don't use the --ignore-words option
+      if ! codespell "$filename"; then
+        echo "ERROR: Misspelled word found in $filename"
+        # make the hook fail
+        exitStatus=1
+      fi
+    else
+      if ! codespell --ignore-words="$ignoreWordsListPath" "$filename"; then
+        echo "ERROR: Misspelled word found in $filename"
+        # make the hook fail
+        exitStatus=1
+      fi
     fi
   fi
 done <<<"$(find . -path './.git' -prune -or -type f)"

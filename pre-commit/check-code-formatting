@@ -29,16 +29,19 @@ git stash -q --keep-index
 exitStatus=0
 
 while read -r filename; do
-  # check if the file is tracked by git
-  if ! git ls-files --error-unmatch "$filename" &>/dev/null; then
-    # don't check untracked files
-    continue
-  fi
+  # check if it's a file (find matches on pruned folders)
+  if [[ -f "$filename" ]]; then
+    # check if the file is tracked by git
+    if ! git ls-files --error-unmatch "$filename" &>/dev/null; then
+      # don't check untracked files
+      continue
+    fi
 
-  if ! diff --strip-trailing-cr "$filename" <(astyle --options="$astyleConfigurationPath" --dry-run <"$filename"); then
-    echo "ERROR: Non-compliant code formatting in $filename"
-    # make the hook fail
-    exitStatus=1
+    if ! diff --strip-trailing-cr "$filename" <(astyle --options="$astyleConfigurationPath" --dry-run <"$filename"); then
+      echo "ERROR: Non-compliant code formatting in $filename"
+      # make the hook fail
+      exitStatus=1
+    fi
   fi
 done <<<"$(find . -regextype posix-extended -path './.git' -prune -or \( -iregex '.*\.((ino)|(h)|(hpp)|(hh)|(hxx)|(h\+\+)|(cpp)|(cc)|(cxx)|(c\+\+)|(cp)|(c)|(ipp)|(ii)|(ixx)|(inl)|(tpp)|(txx)|(tpl))$' -and -type f \))"
 
