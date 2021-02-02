@@ -1,7 +1,9 @@
 # Contribution Rules
+
 Thanks for your interest in contributing to this free open source project! Please take the time to read and follow these rules before submitting an issue report or pull request.
 
 ## Issues
+
 - Before submitting a bug report test using the [latest version of the project](https://github.com/per1234/git-hooks/archive/master.zip) to be sure it hasn't already been fixed. **Don't report issues that only occur with old versions of the project.**
 - Search [existing pull requests and issues](https://github.com/per1234/git-hooks/issues?q=) to be sure it hasn't already been reported. **Do not submit duplicate issue reports.** If you have additional information to provide about the issue then please comment on that issue.
 - Open an issue at https://github.com/per1234/git-hooks/issues/new.
@@ -11,6 +13,7 @@ Thanks for your interest in contributing to this free open source project! Pleas
 - If you find a solution to your problem update your issue report with an explanation of how you were able to fix it and close the issue.
 
 ## Pull Requests
+
 - Search [existing pull requests and issues](https://github.com/per1234/git-hooks/pulls?q=) to make sure the change hasn't already been proposed.
 - Code formatting should be consistent with the current code.
 - Update the [documentation](https://github.com/per1234/git-hooks/blob/master/README.md) if your changes require it. This should be done in the same commit as the change.
