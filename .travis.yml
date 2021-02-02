@@ -1,12 +1,5 @@
 matrix:
   include:
-    - name: 'ShellCheck'
-      language: minimal
-      script:
-        # Run shellcheck on all files that don't contain a .
-        - find ${TRAVIS_BUILD_DIR} -path "${TRAVIS_BUILD_DIR}/.git" -prune -or \( -not -name '*.*' -and -not -name 'LICENSE' -and -type f \) -print0 | xargs --null --max-lines=1 bash -c 'if ! shellcheck "$0"; then false; fi'
-
-
     - name: 'Script Formatting Check'
       language: go
       install:
