@@ -1,13 +1,5 @@
 matrix:
   include:
-    - name: 'Script Formatting Check'
-      language: go
-      install:
-        - go get -u mvdan.cc/sh/cmd/shfmt
-      script:
-        - shfmt -i 2 -d .
-
-
     # Check all the files in the repository for consistent formatting
     - name: 'File Formatting Checks'
       language: minimal
